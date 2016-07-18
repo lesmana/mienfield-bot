@@ -1,3 +1,19 @@
 bot to play mienfield
 
 http://mienfield.com/
+
+how to use
+----------
+
+* firefox load mienfield.com
+* start bot
+* switch to firefox
+* wait
+* see teleport
+
+dependencies
+------------
+
+* scrot
+* visgrep from xautomation
+* xte from xautomation
