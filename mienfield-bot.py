@@ -28,12 +28,14 @@ def visgrep(what):
   result = run('visgrep screenshot.png {}'.format(what))
   if not result.stdout:
     raise Exception('visgrep {} failed'.format(what))
-  output = result.stdout
-  coords = output.split()[0]
-  x, y = coords.split(',')
-  intx = int(x)
-  inty = int(y)
-  return intx, inty
+  allcoords = []
+  for output in result.stdout.splitlines():
+    coords = output.split()[0]
+    x, y = coords.split(',')
+    intx = int(x)
+    inty = int(y)
+    allcoords.append((intx, inty))
+  return allcoords
 
 def click(x, y):
   result = run('xte "mousemove {} {}"'.format(x, y))
@@ -51,7 +53,7 @@ def main():
   wait_for_user(delay)
   screenshot()
   try:
-    tx, ty = visgrep('images/teleport.png')
+    [(tx, ty)] = visgrep('images/teleport.png')
   except Exception:
     print('failed to find teleporter')
     print('are you sure that mienfield is on screen?')
