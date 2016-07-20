@@ -2,6 +2,7 @@
 
 import shlex
 import subprocess
+import sys
 import time
 
 def wait_for_user(howlong):
@@ -44,13 +45,17 @@ def click(x, y):
 
 def main():
   print('put mienfield fullscreen')
-  wait_for_user(3)
+  delay = 3
+  if len(sys.argv) > 1:
+    delay = int(sys.argv[1])
+  wait_for_user(delay)
   screenshot()
   try:
     tx, ty = visgrep('images/teleport.png')
   except Exception:
     print('failed to find teleporter')
     print('are you sure that mienfield is on screen?')
+    sys.exit(1)
   else:
     click(tx + 10, ty + 10)
 
