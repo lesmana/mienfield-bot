@@ -19,7 +19,7 @@ def run(command):
         universal_newlines=True)
   return result
 
-def screenshot():
+def make_screenshot():
   result = run('scrot screenshot.png')
   if result.returncode:
     raise Exception('scrot failed')
@@ -80,7 +80,7 @@ def main():
   if len(sys.argv) > 1:
     delay = int(sys.argv[1])
   wait_for_user(delay)
-  screenshot()
+  make_screenshot()
   mienfield = parse_mienfield()
   for key in sorted(mienfield):
     print(key, mienfield[key])
