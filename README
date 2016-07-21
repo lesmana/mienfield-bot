@@ -17,3 +17,4 @@ dependencies
 * scrot
 * visgrep from xautomation
 * xte from xautomation
+* convert from imagemagick

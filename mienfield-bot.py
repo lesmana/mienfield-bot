@@ -45,6 +45,35 @@ def click(x, y):
   if result.returncode:
     raise Exception('xte mouseclick failed')
 
+def convertcrop(w, h):
+  result = run('convert screenshot.png -crop {}x{}+0+1 +repage screenshotcropped.png'.format(w, h))
+  if result.returncode:
+    raise Exception('convert crop failed')
+
+def parse_mienfield_for_what(what):
+  try:
+    poses = visgrep('screenshotcropped.png', 'images/{}.png'.format(what))
+  except Exception:
+    return {}
+  mienfield_what = {}
+  for rx, ry in poses:
+    cx = rx // 32
+    cy = ry // 32
+    mienfield_what[(cx, cy)] = what
+  return mienfield_what
+
+def parse_mienfield():
+  [(rbx, _)] = visgrep('screenshot.png', 'images/sidebar.png')
+  [(_, rby)] = visgrep('screenshot.png', 'images/teleport.png')
+  bx = rbx - (rbx % 32)
+  by = rby - (rby % 32)
+  convertcrop(bx, by)
+  mienfield = {}
+  for what in ['1', '2', '3', '4', '5', '6', 'closed', 'open', 'mine']:
+    mienfield_what = parse_mienfield_for_what(what)
+    mienfield.update(mienfield_what)
+  return mienfield
+
 def main():
   print('put mienfield fullscreen')
   delay = 3
@@ -52,14 +81,9 @@ def main():
     delay = int(sys.argv[1])
   wait_for_user(delay)
   screenshot()
-  try:
-    [(tx, ty)] = visgrep('screenshot.png', 'images/teleport.png')
-  except Exception:
-    print('failed to find teleporter')
-    print('are you sure that mienfield is on screen?')
-    sys.exit(1)
-  else:
-    click(tx + 10, ty + 10)
+  mienfield = parse_mienfield()
+  for key in sorted(mienfield):
+    print(key, mienfield[key])
 
 if __name__ == '__main__':
   main()
