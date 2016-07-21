@@ -79,6 +79,7 @@ def parse_mienfield(screenshot):
   screenshotcropped = convertcrop(screenshot, bx, by)
   mienfield = {}
   for what in ['1', '2', '3', '4', '5', '6', 'closed', 'open', 'mine']:
+    print('looking for {}'.format(what))
     mienfield_what = parse_mienfield_for_what(screenshotcropped, what)
     mienfield.update(mienfield_what)
   return mienfield
