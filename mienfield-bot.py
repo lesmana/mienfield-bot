@@ -48,13 +48,15 @@ def click(x, y):
     raise Exception('xte mouseclick failed')
 
 def convertcrop(screenshot, w, h):
-  result = run('convert {} -crop {}x{}+0+1 +repage screenshotcropped.png'.format(screenshot, w, h))
+  croppedfilename = 'screenshotcropped.png'
+  result = run('convert {} -crop {}x{}+0+1 +repage {}'.format(screenshot, w, h, croppedfilename))
   if result.returncode:
     raise Exception('convert crop failed')
+  return croppedfilename
 
-def parse_mienfield_for_what(what):
+def parse_mienfield_for_what(screenshot, what):
   try:
-    poses = visgrep('screenshotcropped.png', 'images/{}.png'.format(what))
+    poses = visgrep(screenshot, 'images/{}.png'.format(what))
   except Exception:
     return {}
   mienfield_what = {}
@@ -69,10 +71,10 @@ def parse_mienfield(screenshot):
   [(_, rby)] = visgrep(screenshot, 'images/teleport.png')
   bx = rbx - (rbx % 32)
   by = rby - (rby % 32)
-  convertcrop(screenshot, bx, by)
+  screenshotcropped = convertcrop(screenshot, bx, by)
   mienfield = {}
   for what in ['1', '2', '3', '4', '5', '6', 'closed', 'open', 'mine']:
-    mienfield_what = parse_mienfield_for_what(what)
+    mienfield_what = parse_mienfield_for_what(screenshotcropped, what)
     mienfield.update(mienfield_what)
   return mienfield
 
