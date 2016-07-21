@@ -20,9 +20,11 @@ def run(command):
   return result
 
 def make_screenshot():
-  result = run('scrot screenshot.png')
+  screenshotfilename = 'screenshot.png'
+  result = run('scrot {}'.format(screenshotfilename))
   if result.returncode:
     raise Exception('scrot failed')
+  return screenshotfilename
 
 def visgrep(where, what):
   result = run('visgrep {} {}'.format(where, what))
@@ -45,8 +47,8 @@ def click(x, y):
   if result.returncode:
     raise Exception('xte mouseclick failed')
 
-def convertcrop(w, h):
-  result = run('convert screenshot.png -crop {}x{}+0+1 +repage screenshotcropped.png'.format(w, h))
+def convertcrop(screenshot, w, h):
+  result = run('convert {} -crop {}x{}+0+1 +repage screenshotcropped.png'.format(screenshot, w, h))
   if result.returncode:
     raise Exception('convert crop failed')
 
@@ -62,12 +64,12 @@ def parse_mienfield_for_what(what):
     mienfield_what[(cx, cy)] = what
   return mienfield_what
 
-def parse_mienfield():
-  [(rbx, _)] = visgrep('screenshot.png', 'images/sidebar.png')
-  [(_, rby)] = visgrep('screenshot.png', 'images/teleport.png')
+def parse_mienfield(screenshot):
+  [(rbx, _)] = visgrep(screenshot, 'images/sidebar.png')
+  [(_, rby)] = visgrep(screenshot, 'images/teleport.png')
   bx = rbx - (rbx % 32)
   by = rby - (rby % 32)
-  convertcrop(bx, by)
+  convertcrop(screenshot, bx, by)
   mienfield = {}
   for what in ['1', '2', '3', '4', '5', '6', 'closed', 'open', 'mine']:
     mienfield_what = parse_mienfield_for_what(what)
@@ -80,8 +82,8 @@ def main():
   if len(sys.argv) > 1:
     delay = int(sys.argv[1])
   wait_for_user(delay)
-  make_screenshot()
-  mienfield = parse_mienfield()
+  screenshot = make_screenshot()
+  mienfield = parse_mienfield(screenshot)
   for key in sorted(mienfield):
     print(key, mienfield[key])
 
