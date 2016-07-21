@@ -49,7 +49,8 @@ def click(x, y):
 
 def convertcrop(screenshot, w, h):
   croppedfilename = 'screenshotcropped.png'
-  result = run('convert {} -crop {}x{}+0+1 +repage {}'.format(screenshot, w, h, croppedfilename))
+  result = run('convert {} -crop {}x{}+0+1 +repage {}'.format(
+        screenshot, w, h, croppedfilename))
   if result.returncode:
     raise Exception('convert crop failed')
   return croppedfilename
