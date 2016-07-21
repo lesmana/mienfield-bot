@@ -64,6 +64,20 @@ def convertcrop(screenshot, w, h):
     raise Exception('convert crop failed')
   return croppedfilename
 
+class MienField():
+  def __init__(self, width, height, cells):
+    self.width = width
+    self.height = height
+    self.cells = cells
+
+class Cell():
+  def __init__(self, cellx, celly, pixelx, pixely, what):
+    self.cellx = cellx
+    self.celly = celly
+    self.pixelx = pixelx
+    self.pixely = pixely
+    self.what = what
+
 def parse_mienfield_for_what(screenshot, what):
   try:
     poses = visgrep(screenshot, 'images/{}.png'.format(what))
@@ -73,14 +87,14 @@ def parse_mienfield_for_what(screenshot, what):
   for rx, ry in poses:
     cx = rx // 32
     cy = ry // 32
-    mienfield_what[(cx, cy)] = what
+    mienfield_what[(cx, cy)] = Cell(cx, cy, rx, ry, what)
   return mienfield_what
 
 def complete_field(mienfield, dx, dy):
   for x in range(dx):
     for y in range(dy):
       if (x, y) not in mienfield:
-        mienfield[(x, y)] = 'flag?'
+        mienfield[(x, y)] = Cell(x, y, None, None, 'flag?')
 
 def parse_mienfield(screenshot):
   dx, dy, bx, by = determine_borders(screenshot)
@@ -91,6 +105,7 @@ def parse_mienfield(screenshot):
     mienfield_what = parse_mienfield_for_what(screenshotcropped, what)
     mienfield.update(mienfield_what)
   complete_field(mienfield, dx, dy)
+  mienfield = MienField(dx, dy, mienfield)
   return mienfield
 
 def main():
@@ -101,8 +116,8 @@ def main():
   wait_for_user(delay)
   screenshot = make_screenshot()
   mienfield = parse_mienfield(screenshot)
-  for key in sorted(mienfield):
-    print(key, mienfield[key])
+  for key in sorted(mienfield.cells):
+    print(key, mienfield.cells[key].what)
 
 if __name__ == '__main__':
   main()
