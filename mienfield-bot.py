@@ -24,10 +24,10 @@ def screenshot():
   if result.returncode:
     raise Exception('scrot failed')
 
-def visgrep(what):
-  result = run('visgrep screenshot.png {}'.format(what))
+def visgrep(where, what):
+  result = run('visgrep {} {}'.format(where, what))
   if not result.stdout:
-    raise Exception('visgrep {} failed'.format(what))
+    raise Exception('visgrep {} {} failed'.format(where, what))
   allcoords = []
   for output in result.stdout.splitlines():
     coords = output.split()[0]
@@ -53,7 +53,7 @@ def main():
   wait_for_user(delay)
   screenshot()
   try:
-    [(tx, ty)] = visgrep('images/teleport.png')
+    [(tx, ty)] = visgrep('screenshot.png', 'images/teleport.png')
   except Exception:
     print('failed to find teleporter')
     print('are you sure that mienfield is on screen?')
