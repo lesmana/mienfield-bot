@@ -47,6 +47,13 @@ def click(x, y):
   if result.returncode:
     raise Exception('xte mouseclick failed')
 
+def determine_borders(screenshot):
+  [(rbx, _)] = visgrep(screenshot, 'images/sidebar.png')
+  [(_, rby)] = visgrep(screenshot, 'images/teleport.png')
+  bx = rbx - (rbx % 32)
+  by = rby - (rby % 32)
+  return bx, by
+
 def convertcrop(screenshot, w, h):
   croppedfilename = 'screenshotcropped.png'
   result = run('convert {} -crop {}x{}+0+1 +repage {}'.format(
@@ -68,10 +75,7 @@ def parse_mienfield_for_what(screenshot, what):
   return mienfield_what
 
 def parse_mienfield(screenshot):
-  [(rbx, _)] = visgrep(screenshot, 'images/sidebar.png')
-  [(_, rby)] = visgrep(screenshot, 'images/teleport.png')
-  bx = rbx - (rbx % 32)
-  by = rby - (rby % 32)
+  bx, by = determine_borders(screenshot)
   screenshotcropped = convertcrop(screenshot, bx, by)
   mienfield = {}
   for what in ['1', '2', '3', '4', '5', '6', 'closed', 'open', 'mine']:
