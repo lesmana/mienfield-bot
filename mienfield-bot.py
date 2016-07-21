@@ -50,9 +50,11 @@ def click(x, y):
 def determine_borders(screenshot):
   [(rbx, _)] = visgrep(screenshot, 'images/sidebar.png')
   [(_, rby)] = visgrep(screenshot, 'images/teleport.png')
-  bx = rbx - (rbx % 32)
-  by = rby - (rby % 32)
-  return bx, by
+  dx, mx = divmod(rbx, 32)
+  dy, my = divmod(rby, 32)
+  bx = rbx - mx
+  by = rby - my
+  return dx, dy, bx, by
 
 def convertcrop(screenshot, w, h):
   croppedfilename = 'screenshotcropped.png'
@@ -74,14 +76,21 @@ def parse_mienfield_for_what(screenshot, what):
     mienfield_what[(cx, cy)] = what
   return mienfield_what
 
+def complete_field(mienfield, dx, dy):
+  for x in range(dx):
+    for y in range(dy):
+      if (x, y) not in mienfield:
+        mienfield[(x, y)] = 'flag?'
+
 def parse_mienfield(screenshot):
-  bx, by = determine_borders(screenshot)
+  dx, dy, bx, by = determine_borders(screenshot)
   screenshotcropped = convertcrop(screenshot, bx, by)
   mienfield = {}
   for what in ['1', '2', '3', '4', '5', '6', 'closed', 'open', 'mine']:
     print('looking for {}'.format(what))
     mienfield_what = parse_mienfield_for_what(screenshotcropped, what)
     mienfield.update(mienfield_what)
+  complete_field(mienfield, dx, dy)
   return mienfield
 
 def main():
