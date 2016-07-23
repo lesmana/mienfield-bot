@@ -94,7 +94,9 @@ def complete_field(mienfield, dx, dy):
   for x in range(dx+1):
     for y in range(dy+1):
       if (x, y) not in mienfield:
-        mienfield[(x, y)] = Cell(x, y, None, None, 'flag?')
+        px = x * 32
+        py = y * 32
+        mienfield[(x, y)] = Cell(x, y, px, py, 'flag?')
 
 def parse_mienfield(screenshot):
   dx, dy, bx, by = determine_borders(screenshot)
