@@ -5,6 +5,9 @@ import subprocess
 import sys
 import time
 
+from PIL import Image
+from PIL import ImageDraw
+
 def wait_for_user(howlong):
   for i in range(howlong, 0, -1):
     print(i)
@@ -180,16 +183,28 @@ def mark_neighbours(mienfield):
       cell.closedlist = closedlist
       cell.flaglist = flaglist
 
+def visualize(boring, interesting, clickopen, clickflag):
+  image = Image.open('screenshot.png')
+  draw = ImageDraw.Draw(image, 'RGBA')
+  for cell in boring:
+    x = cell.pixelx
+    y = cell.pixely
+    draw.rectangle([(x, y), (x+30, y+30)], (0, 0, 0, 127))
+  for cell in clickopen:
+    x = cell.pixelx
+    y = cell.pixely
+    draw.rectangle([(x, y), (x+30, y+30)], (127, 0, 0, 127))
+  for cell in clickflag:
+    x = cell.pixelx
+    y = cell.pixely
+    draw.rectangle([(x, y), (x+30, y+30)], (0, 127, 0, 127))
+  image.save('screenshotclick.png')
+
 def count(mienfield):
   mark_borders(mienfield)
   mark_neighbours(mienfield)
   boring, interesting, clickopen, clickflag = classify_cells(mienfield)
-  print('click to open')
-  for cell in clickopen:
-    print(cell.what, cell.cellx, cell.celly)
-  print('click to flag')
-  for cell in clickflag:
-    print(cell.what, cell.cellx, cell.celly)
+  visualize(boring, interesting, clickopen, clickflag)
 
 def main():
   print('put mienfield fullscreen')

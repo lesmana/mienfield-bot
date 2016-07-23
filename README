@@ -18,3 +18,4 @@ dependencies
 * visgrep from xautomation
 * xte from xautomation
 * convert from imagemagick
+* PIL/Pillow
