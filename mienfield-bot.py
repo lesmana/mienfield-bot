@@ -154,7 +154,7 @@ def classify_cells(mienfield):
     if not cell.border:
       if cell.what in ('1', '2', '3', '4', '5', '6'):
         if len(cell.closedlist) > 0:
-          if int(cell.what) + len(cell.flaglist) == len(cell.closedlist):
+          if int(cell.what) - len(cell.flaglist) == len(cell.closedlist):
             clickflag.append(cell)
           elif int(cell.what) == len(cell.flaglist):
             clickopen.append(cell)
