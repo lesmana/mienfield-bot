@@ -42,11 +42,11 @@ def visgrep(where, what):
     allcoords.append((intx, inty))
   return allcoords
 
-def click(x, y):
+def click(x, y, what):
   result = run('xte "mousemove {} {}"'.format(x, y))
   if result.returncode:
     raise Exception('xte mousemove failed')
-  result = run('xte "mouseclick 1"')
+  result = run('xte "mouseclick {}"'.format(what))
   if result.returncode:
     raise Exception('xte mouseclick failed')
 
@@ -205,6 +205,18 @@ def count(mienfield):
   mark_neighbours(mienfield)
   boring, interesting, clickopen, clickflag = classify_cells(mienfield)
   visualize(boring, interesting, clickopen, clickflag)
+  mienfield.boring = boring
+  mienfield.interesting = interesting
+  mienfield.clickopen = clickopen
+  mienfield.clickflag = clickflag
+
+def do_the_clicks(mienfield):
+  for cell in mienfield.clickopen:
+    time.sleep(0.2)
+    click(cell.pixelx + 10, cell.pixely + 10, 1)
+  for cell in mienfield.clickflag:
+    time.sleep(0.2)
+    click(cell.pixelx + 10, cell.pixely + 10, 3)
 
 def main():
   print('put mienfield fullscreen')
@@ -215,6 +227,7 @@ def main():
   screenshot = make_screenshot()
   mienfield = parse_mienfield(screenshot)
   count(mienfield)
+  do_the_clicks(mienfield)
 
 if __name__ == '__main__':
   main()
