@@ -91,8 +91,8 @@ def parse_mienfield_for_what(screenshot, what):
   return mienfield_what
 
 def complete_field(mienfield, dx, dy):
-  for x in range(dx):
-    for y in range(dy):
+  for x in range(dx+1):
+    for y in range(dy+1):
       if (x, y) not in mienfield:
         mienfield[(x, y)] = Cell(x, y, None, None, 'flag?')
 
@@ -108,6 +108,87 @@ def parse_mienfield(screenshot):
   mienfield = MienField(dx, dy, mienfield)
   return mienfield
 
+def mark_borders(mienfield):
+  for cell in mienfield.cells.values():
+    if cell.cellx in (0, mienfield.width) or cell.celly in (0, mienfield.height):
+      cell.border = True
+    else:
+      cell.border = False
+
+def get_neighbours(mienfield, cx, cy):
+  neighbours = []
+  neighbours.append(mienfield.cells[(cx  , cy-1)])
+  neighbours.append(mienfield.cells[(cx+1, cy-1)])
+  neighbours.append(mienfield.cells[(cx+1, cy  )])
+  neighbours.append(mienfield.cells[(cx+1, cy+1)])
+  neighbours.append(mienfield.cells[(cx  , cy+1)])
+  neighbours.append(mienfield.cells[(cx-1, cy+1)])
+  neighbours.append(mienfield.cells[(cx-1, cy  )])
+  neighbours.append(mienfield.cells[(cx-1, cy-1)])
+  return neighbours
+
+def count_neighbours(cell, neighbours):
+  openlist = []
+  closedlist = []
+  flaglist = []
+  for n in neighbours:
+    if n.what in ('1', '2', '3', '4', '5', '6', 'open'):
+      openlist.append(n)
+    elif n.what == 'closed':
+      closedlist.append(n)
+    elif n.what in ('mine', 'flag?'):
+      flaglist.append(n)
+  return openlist, closedlist, flaglist
+
+def classify_cells(mienfield):
+  boring = []
+  interesting = []
+  clickopen = []
+  clickflag = []
+  for cell in mienfield.cells.values():
+    if not cell.border:
+      if cell.what in ('1', '2', '3', '4', '5', '6'):
+        if len(cell.closedlist) > 0:
+          if int(cell.what) + len(cell.flaglist) == len(cell.closedlist):
+            clickflag.append(cell)
+          elif int(cell.what) == len(cell.flaglist):
+            clickopen.append(cell)
+          else:
+            interesting.append(cell)
+        else:
+          boring.append(cell)
+      elif cell.what == 'open':
+        boring.append(cell)
+      elif cell.what == 'closed':
+        if len(cell.openlist) > 0:
+          interesting.append(cell)
+        else:
+          boring.append(cell)
+      elif cell.what in ('mine', 'flag?'):
+        boring.append(cell)
+  return boring, interesting, clickopen, clickflag
+
+def mark_neighbours(mienfield):
+  for cell in mienfield.cells.values():
+    if not cell.border:
+      neighbours = get_neighbours(mienfield, cell.cellx, cell.celly)
+      openlist, closedlist, flaglist = count_neighbours(cell, neighbours)
+      cell.neighbours = neighbours
+      cell.openlist = openlist
+      cell.closedlist = closedlist
+      cell.flaglist = flaglist
+
+def count(mienfield):
+  mark_borders(mienfield)
+  mark_neighbours(mienfield)
+  boring, interesting, clickopen, clickflag = classify_cells(mienfield)
+  print('click to open')
+  for cell in clickopen:
+    print(cell.what, cell.cellx, cell.celly)
+  print('click to flag')
+  for cell in clickflag:
+    print(cell.what, cell.cellx, cell.celly)
+
 def main():
   print('put mienfield fullscreen')
   delay = 3
@@ -116,8 +197,7 @@ def main():
   wait_for_user(delay)
   screenshot = make_screenshot()
   mienfield = parse_mienfield(screenshot)
-  for key in sorted(mienfield.cells):
-    print(key, mienfield.cells[key].what)
+  count(mienfield)
 
 if __name__ == '__main__':
   main()
