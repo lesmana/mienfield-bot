@@ -22,8 +22,7 @@ def run(command):
         universal_newlines=True)
   return result
 
-def make_screenshot():
-  screenshotfilename = 'screenshot.png'
+def make_screenshot(screenshotfilename = 'screenshot.png'):
   result = run('scrot {}'.format(screenshotfilename))
   if result.returncode:
     raise Exception('scrot failed')
@@ -201,6 +200,7 @@ def visualize(boring, interesting, clickopen, clickflag):
   image.save('screenshotclick.png')
 
 def count(mienfield):
+  print('counting mines and flags')
   mark_borders(mienfield)
   mark_neighbours(mienfield)
   boring, interesting, clickopen, clickflag = classify_cells(mienfield)
@@ -211,6 +211,7 @@ def count(mienfield):
   mienfield.clickflag = clickflag
 
 def do_the_clicks(mienfield):
+  print('clicking')
   for cell in mienfield.clickopen:
     time.sleep(0.2)
     click(cell.pixelx + 10, cell.pixely + 10, 1)
@@ -228,6 +229,9 @@ def main():
   mienfield = parse_mienfield(screenshot)
   count(mienfield)
   do_the_clicks(mienfield)
+  print('waiting')
+  time.sleep(1)
+  make_screenshot('screenshotafter.png')
 
 if __name__ == '__main__':
   main()
