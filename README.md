@@ -9,6 +9,9 @@ i created this because i like to code how to solve a game
 more than solving the game itself.
 also because i like to practice how to automate boring clicks.
 
+the bot works by taking a screenshot, then image recognition,
+then calculating minesweeper logic, then clicking.
+
 how to use
 ----------
 
