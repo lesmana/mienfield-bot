@@ -1,0 +1,24 @@
+the bot in action.
+
+the highlighted rectangle is the action space for the bot.
+everything outside the rectangle is ignored.
+
+the cells in dark gray are uninteresting.
+these are closed cells wit no numbers.
+number cells with no closed cells.
+and flagged cells.
+nothing can be done with them.
+
+the not highlighted cells in the middle are the interesting cells.
+here we can open closed cells or place flags.
+
+the red and green highlighted cells will be clicked.
+for now only numbers will be clicked.
+
+red cells have the right number of flags.
+that means all closed cells can be opened.
+red cells will be left clicked.
+
+green cells have the right number of closed cells around.
+that means all closed cells can be flagged.
+green cells will be right clicked.
