@@ -33,8 +33,8 @@ there is no way to recognize custom flags.
 for now only number and open and closed cells are recognized.
 everything else is assumed to be a flag.
 
-only numbers 1 to 6 is recognized.
-because i have not encountered a 7 yet.
+only numbers 1 to 7 is recognized.
+because i have not encountered an 8 yet.
 
 only number cells with neighbouring closed cells are considered to click.
 if number in cell is equal to number of flags
