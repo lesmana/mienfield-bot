@@ -12,6 +12,12 @@ also because i like to practice how to automate boring clicks.
 the bot works by taking a screenshot, then image recognition,
 then calculating minesweeper logic, then clicking.
 
+number cells with neighbouring closed cells are inspected.
+if number in cell is equal to number of flags
+then left click to open closed cells.
+if number in cell minus number of flags is equal to closed cells
+then right click to flag closed cells.
+
 how to use
 ----------
 
@@ -35,12 +41,6 @@ everything else is assumed to be a flag.
 
 only numbers 1 to 7 is recognized.
 because i have not encountered an 8 yet.
-
-only number cells with neighbouring closed cells are considered to click.
-if number in cell is equal to number of flags
-then left click to open closed cells.
-if number in cell minus number of flags is equal to closed cells
-then right click to flag closed cells.
 
 dependencies
 ------------
