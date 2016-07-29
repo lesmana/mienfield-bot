@@ -104,7 +104,7 @@ def parse_mienfield(screenshot):
   dx, dy, bx, by = determine_borders(screenshot)
   screenshotcropped = convertcrop(screenshot, bx, by)
   mienfield = {}
-  for what in ['1', '2', '3', '4', '5', '6', 'closed', 'open', 'mine']:
+  for what in ['1', '2', '3', '4', '5', '6', '7', 'closed', 'open', 'mine']:
     print('looking for {}'.format(what))
     mienfield_what = parse_mienfield_for_what(screenshotcropped, what)
     mienfield.update(mienfield_what)
@@ -136,7 +136,7 @@ def count_neighbours(cell, neighbours):
   closedlist = []
   flaglist = []
   for n in neighbours:
-    if n.what in ('1', '2', '3', '4', '5', '6', 'open'):
+    if n.what in ('1', '2', '3', '4', '5', '6', '7', 'open'):
       openlist.append(n)
     elif n.what == 'closed':
       closedlist.append(n)
@@ -151,7 +151,7 @@ def classify_cells(mienfield):
   clickflag = []
   for cell in mienfield.cells.values():
     if not cell.border:
-      if cell.what in ('1', '2', '3', '4', '5', '6'):
+      if cell.what in ('1', '2', '3', '4', '5', '6', '7'):
         if len(cell.closedlist) > 0:
           if int(cell.what) - len(cell.flaglist) == len(cell.closedlist):
             clickflag.append(cell)
