@@ -2,8 +2,9 @@ mienfield bot
 =============
 
 a bot to play mienfield. mienfield is a html5 mmo minesweeper.
+sadly the game no longer exists on the internets.
 
-http://mienfield.com/
+this code will stay online for posterity.
 
 i created this because i like to code how to solve a game
 more than solving the game itself.
