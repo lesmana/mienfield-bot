@@ -57,15 +57,12 @@ license
 
 Copyright 2016  Lesmana Zimmer
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+This program is free software.
+It is licensed under the GNU GPL version 3 or later.
+That means you are free to use this program for any purpose;
+free to study and modify this program to suit your needs;
+and free to share this program or your modifications with anyone.
+If you share this program or your modifications
+you must grant the recipients the same freedoms.
+To be more specific: you must share the source code under the same license.
+For details see https://www.gnu.org/licenses/gpl-3.0.html
